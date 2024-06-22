@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <PackageId>Testudo</PackageId>
+        <Description>A work-in-progress experimental cross-platform library for creating lightweight desktop Blazor applications.</Description>
+        <Version>0.1.0</Version>
+        <Authors>Kizari</Authors>
+        <Company>Visium</Company>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <RepositoryUrl>https://github.com/Kizari/Testudo.git</RepositoryUrl>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Copyright>Copyright © 2024 Kizari</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>https://github.com/Kizari/Testudo/blob/main/CHANGELOG.md</PackageReleaseNotes>
+        <RepositoryBranch>main</RepositoryBranch>
+        <RepositoryCommit>f714611adf6219ca78629e34a1128fd1095da391</RepositoryCommit>
+        <PackageTags>blazor;desktop</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../LICENSE" Pack="true" PackagePath=""/>
+        <None Include="../../README.md" Pack="true" PackagePath=""/>
+        <None Include="$(SolutionDir)/src/Testudo.Native/build/Testudo.Native.so" Pack="true"
+              PackagePath="runtimes/linux-x64/native/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="8.0.*"/>
+    </ItemGroup>
+
+</Project>
