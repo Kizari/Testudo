@@ -17,7 +17,7 @@ public partial class TestudoApplication : ITestudoApplication
     /// <inheritdoc />
     public void Run()
     {
-        TestudoApplication_Run(_instance);
+        TestudoApplication_Run();
     }
 
     /// <inheritdoc />
@@ -30,7 +30,13 @@ public partial class TestudoApplication : ITestudoApplication
         }
         else
         {
-            TestudoApplication_Invoke(_instance, action.Invoke);
+            TestudoApplication_Invoke(action.Invoke);
         }
+    }
+
+    /// <inheritdoc />
+    public string? OpenFolderDialog()
+    {
+        return TestudoApplication_OpenFolderDialog();
     }
 }

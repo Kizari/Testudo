@@ -38,8 +38,11 @@ public partial class TestudoWindow : ITestudoWindow
             provider.GetRequiredService<Dispatcher>(),
             provider.GetRequiredService<IFileProvider>(),
             provider.GetRequiredService<JSComponentConfigurationStore>(),
-            out configuration.WebMessageReceivedHandler,
-            out configuration.WebResourceRequestedHandler);
+            out var webMessageReceivedHandler,
+            out var webResourceRequestedHandler);
+        
+        configuration.SetWebMessageReceivedHandler(webMessageReceivedHandler);
+        configuration.SetWebResourceRequestedHandler(webResourceRequestedHandler);
 
         // Create the native window
         _configuration = configuration;

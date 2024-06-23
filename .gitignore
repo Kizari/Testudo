@@ -401,3 +401,5 @@ FodyWeavers.xsd
 riderModule.iml
 /_ReSharper.Caches/
 **/.idea/shelf/
+
+**/cmake-build-debug/

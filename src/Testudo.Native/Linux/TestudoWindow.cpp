@@ -2,71 +2,81 @@
 
 #include "../TestudoWindow.h"
 
-#include <string>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
+#include <string>
 
 /**
- * \brief Holds information pertaining to a JavaScript invocation.
+ * @brief Holds information pertaining to a JavaScript invocation.
  */
-struct JSInvocation
+struct JavaScriptInvocation
 {
-    bool isCompleted; /**< Specifies whether or not the invocation has completed. */
+    /** Specifies whether or not the invocation has completed. */
+    bool is_completed;
 };
 
-/**
- * \brief Passes a JavaScript result back to managed code for processing.
- */
-void handleWebMessage(
-    WebKitUserContentManager* contentManager,
-    WebKitJavascriptResult* jsResult,
-    gpointer arg)
+void TestudoWindow::script_message_received_callback(
+    [[maybe_unused]] WebKitUserContentManager* content_manager,
+    WebKitJavascriptResult* js_result,
+    // ReSharper disable once CppParameterMayBeConst
+    gpointer data)
 {
-    JSCValue* jsValue = webkit_javascript_result_get_js_value(jsResult);
+    JSCValue* js_value = webkit_javascript_result_get_js_value(js_result);
 
-    if (jsc_value_is_string(jsValue))
+    if (jsc_value_is_string(js_value))
     {
-        String value = jsc_value_to_string(jsValue);
-        ((WebMessageReceivedDelegate)arg)(value);
+        char* value = jsc_value_to_string(js_value);
+        reinterpret_cast<WebMessageReceivedDelegate>(data)(value);
         g_free(value);
     }
 
-    webkit_javascript_result_unref(jsResult);
+    webkit_javascript_result_unref(js_result);
 }
 
-/**
- * \brief Pulls a resource's data buffer from managed code and passes it to the web view.
- */
-void handleWebResourceRequest(WebKitURISchemeRequest* request, gpointer data)
+// ReSharper disable once CppParameterMayBeConst
+void TestudoWindow::web_context_register_uri_scheme_callback(WebKitURISchemeRequest* request, gpointer data)
 {
-    auto delegate = (WebResourceRequestedDelegate)data;
-    auto uri = webkit_uri_scheme_request_get_uri(request);
+    // ReSharper disable once CppCStyleCast
+    const auto delegate = (WebResourceRequestedDelegate)data;
+    const auto uri = webkit_uri_scheme_request_get_uri(request);
 
-    int numBytes;
-    String contentType;
-    auto result = delegate((String)uri, &numBytes, &contentType);
+    int size_bytes;
+    String content_type;
+    const auto result =
+        delegate(const_cast<String>(uri), &size_bytes, &content_type);
 
-    GInputStream* stream = g_memory_input_stream_new_from_data(result, numBytes, nullptr);
-    webkit_uri_scheme_request_finish(request, stream, -1, contentType);
+    GInputStream* stream = g_memory_input_stream_new_from_data(
+        result, size_bytes, nullptr);
+    webkit_uri_scheme_request_finish(request, stream, -1, content_type);
 
     g_object_unref(stream);
-    delete[] contentType;
+    delete[] content_type;
 }
 
-TestudoWindow::TestudoWindow(TestudoWindowConfiguration* configuration)
+TestudoWindow::TestudoWindow(const TestudoWindowConfiguration* configuration)
 {
     // Create the window
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(GTK_WINDOW(window), -1, -1);
-    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_NONE);
+    _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+    // Apply window configuration
+    gtk_window_set_default_size(GTK_WINDOW(_window), configuration->width, configuration->height);
+
+    if (configuration->is_centered)
+    {
+        gtk_window_set_position(GTK_WINDOW(_window), GTK_WIN_POS_CENTER);
+    }
+    else
+    {
+        gtk_window_move(GTK_WINDOW(_window), configuration->left, configuration->top);
+    }
 
     // Create the web view and add it to the window
-    contentManager = webkit_user_content_manager_new();
-    webView = webkit_web_view_new_with_user_content_manager(contentManager);
-    gtk_container_add(GTK_CONTAINER(window), webView);
+    _content_manager = webkit_user_content_manager_new();
+    _web_view = webkit_web_view_new_with_user_content_manager(_content_manager);
+    gtk_container_add(GTK_CONTAINER(_window), _web_view);
 
     // Setup interop script
-    auto script = webkit_user_script_new(
+    const auto script = webkit_user_script_new(
         "window.__receiveMessageCallbacks = [];"
         "window.__dispatchMessageCallback = function(message) {"
         "	window.__receiveMessageCallbacks.forEach(function(callback) { callback(message); });"
@@ -79,121 +89,126 @@ TestudoWindow::TestudoWindow(TestudoWindowConfiguration* configuration)
         "		window.__receiveMessageCallbacks.push(callback);"
         "	}"
         "};",
-        WEBKIT_USER_CONTENT_INJECT_ALL_FRAMES, WEBKIT_USER_SCRIPT_INJECT_AT_DOCUMENT_START, nullptr, nullptr);
+        WEBKIT_USER_CONTENT_INJECT_ALL_FRAMES,
+        WEBKIT_USER_SCRIPT_INJECT_AT_DOCUMENT_START, nullptr, nullptr);
 
-    webkit_user_content_manager_add_script(contentManager, script);
+    webkit_user_content_manager_add_script(_content_manager, script);
     webkit_user_script_unref(script);
 
-    g_signal_connect(contentManager, "script-message-received::visium", 
-        G_CALLBACK(handleWebMessage), (void*)configuration->webMessageReceivedHandler);
+    g_signal_connect(_content_manager, "script-message-received::visium",
+                     G_CALLBACK(script_message_received_callback),
+                     configuration->web_message_received_handler);
 
-    webkit_user_content_manager_register_script_message_handler(contentManager, "visium");
+    webkit_user_content_manager_register_script_message_handler(
+        _content_manager, "visium");
 
     // Setup custom scheme handler
-    auto context = webkit_web_context_get_default();
-    webkit_web_context_register_uri_scheme(context, 
-        "app",
-        (WebKitURISchemeRequestCallback)handleWebResourceRequest, 
-        (void*)configuration->webResourceRequestedHandler,
-        nullptr);
+    const auto context = webkit_web_context_get_default();
+    webkit_web_context_register_uri_scheme(context,
+                                           "app",
+                                           web_context_register_uri_scheme_callback,
+                                           configuration->web_resource_requested_handler,
+                                           nullptr);
 
     // Navigate to the initial URI
-    if (configuration->initialUri != nullptr)
+    if (configuration->initial_uri != nullptr)
     {
-        navigate(configuration->initialUri);
+        navigate(configuration->initial_uri);
     }
 
     // Show the window
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(_window);
 }
 
 TestudoWindow::~TestudoWindow()
 {
-    gtk_widget_destroy(window);
+    gtk_widget_destroy(_window);
 }
 
-void TestudoWindow::navigate(String uri)
+void TestudoWindow::navigate(const String uri) const
 {
-    webkit_web_view_load_uri(WEBKIT_WEB_VIEW(webView), uri);
+    webkit_web_view_load_uri(WEBKIT_WEB_VIEW(_web_view), uri);
 }
 
-/** 
- * \brief Escapes characters in a JSON string for use with GTK web view.
- * \param string: The JSON string to format.
- * \returns The formatted JSON string.
- */
-std::string escapeJson(const std::string &string)
+std::string TestudoWindow::escape_json(const std::string& string)
 {
-	std::ostringstream o;
+    std::ostringstream string_stream;
 
-	for (auto c = string.cbegin(); c != string.cend(); c++)
-	{
-		switch (*c)
-		{
-		case '"':
-			o << "\\\"";
-			break;
-		case '\\':
-			o << "\\\\";
-			break;
-		case '\b':
-			o << "\\b";
-			break;
-		case '\f':
-			o << "\\f";
-			break;
-		case '\n':
-			o << "\\n";
-			break;
-		case '\r':
-			o << "\\r";
-			break;
-		case '\t':
-			o << "\\t";
-			break;
-		default:
-			if ('\x00' <= *c && *c <= '\x1f')
-			{
-				o << "\\u"
-				  << std::hex << std::setw(4) << std::setfill('0') << (int)*c;
-			}
-			else
-			{
-				o << *c;
-			}
-		}
-	}
+    for (const char character : string)
+    {
+        switch (character)
+        {
+        case '"':
+            string_stream << "\\\"";
+            break;
+        case '\\':
+            string_stream << "\\\\";
+            break;
+        case '\b':
+            string_stream << "\\b";
+            break;
+        case '\f':
+            string_stream << "\\f";
+            break;
+        case '\n':
+            string_stream << "\\n";
+            break;
+        case '\r':
+            string_stream << "\\r";
+            break;
+        case '\t':
+            string_stream << "\\t";
+            break;
+        default:
+            if ('\x00' <= character && character <= '\x1f')
+            {
+                string_stream << "\\u"
+                    << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>
+                    (character);
+            }
+            else
+            {
+                string_stream << character;
+            }
+        }
+    }
 
-	return o.str();
+    return string_stream.str();
 }
 
-/**
- * \brief Callback to pass to \ref webkit_web_view_run_javascript to execute
- * when the JavaScript has completed execution. Simply sets the invocation
- * result to true so the caller knows to continue.
- * \param data Pointer to the \ref JSInvocation object.
- */
-static void webViewRunJavaScriptCallback(GObject* object, GAsyncResult* result, gpointer data)
+void TestudoWindow::web_view_evaluate_java_script_callback(
+    [[maybe_unused]] GObject* source_object,
+    [[maybe_unused]] GAsyncResult* result,
+    // ReSharper disable once CppParameterMayBeConst
+    gpointer data)
 {
-    auto invocation = (JSInvocation*)data;
-    invocation->isCompleted = true;
+    const auto invocation = static_cast<JavaScriptInvocation*>(data);
+    invocation->is_completed = true;
 }
 
-void TestudoWindow::sendMessage(String message)
+void TestudoWindow::send_message(const String message) const
 {
     // Format the message appropriately for Linux
     std::string javascript;
     javascript.append("__dispatchMessageCallback(\"");
-    javascript.append(escapeJson(message));
+    javascript.append(escape_json(message));
     javascript.append("\")");
+    const auto script = javascript.c_str();
 
     // Invoke the JavaScript evaluation
-    JSInvocation invocation = {};
-    webkit_web_view_run_javascript(WEBKIT_WEB_VIEW(webView), 
-        javascript.c_str(), nullptr, webViewRunJavaScriptCallback, &invocation);
+    JavaScriptInvocation invocation = {};
+    webkit_web_view_evaluate_javascript(
+        WEBKIT_WEB_VIEW(_web_view),
+        script,
+        static_cast<gssize>(strlen(script)),
+        nullptr,
+        nullptr,
+        nullptr,
+        web_view_evaluate_java_script_callback,
+        &invocation);
 
     // Block until the invocation is complete
-    while (!invocation.isCompleted)
+    while (!invocation.is_completed)
     {
         g_main_context_iteration(nullptr, true);
     }

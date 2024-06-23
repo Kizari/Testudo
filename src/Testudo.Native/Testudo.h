@@ -2,12 +2,12 @@
 
 #ifdef _WIN32
     #define EXPORTED __declspec(dllexport)
-    typedef wchar_t* String;
+    using String = const wchar_t*;
 #else
-    #define EXPORTED
-    typedef char* String;
+#define EXPORTED
+using String = const char*;
 #endif
 
-typedef void (*Action)();
-typedef void (*WebMessageReceivedDelegate)(String message);
-typedef void* (*WebResourceRequestedDelegate)(String uri, int* numBytes, String* contentType);
+using Action = void(*)();
+using WebMessageReceivedDelegate = void(*)(String message);
+using WebResourceRequestedDelegate = void* (*)(String uri, int* size_bytes, String* content_type);

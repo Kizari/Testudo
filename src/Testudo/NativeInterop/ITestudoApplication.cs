@@ -26,4 +26,7 @@ public interface ITestudoApplication : IDisposable
     /// </summary>
     /// <param name="action">The action to execute on the main thread.</param>
     void Invoke(Action action);
+
+    /// <inheritdoc cref="TestudoApplication.TestudoApplication_OpenFolderDialog"/>
+    string? OpenFolderDialog();
 }
