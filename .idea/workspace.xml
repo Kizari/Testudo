@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="Testudo" targetName="Testudo.Native" />
+      <config projectName="Testudo" targetName="Testudo.Native.Sample" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f8e2d727-eab3-41f3-aecc-0753a856894c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native.Sample/main.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoWindow.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoWindow.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/Windows/WindowsHelper.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/Windows/WindowsHelper.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/include/ITestudoWindow.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo.Native/include/TestudoApplicationConfiguration.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Testudo/NativeInterop/TestudoApplicationConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/Linux/TestudoApplication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/Linux/TestudoApplication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/Linux/TestudoWindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/Linux/TestudoWindow.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/Testudo.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/include/Testudo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/TestudoApplication.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/include/TestudoApplication.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/TestudoApplicationExports.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/Exports/TestudoApplicationExports.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/TestudoWindow.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/TestudoWindowConfiguration.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/include/TestudoWindowConfiguration.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo.Native/TestudoWindowExports.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo.Native/Exports/TestudoWindowExports.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo/Extensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo/NativeInterop/TestudoApplication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo/NativeInterop/TestudoApplication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo/NativeInterop/TestudoApplicationImports.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo/NativeInterop/TestudoApplicationImports.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Testudo/Testudo.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Testudo/Testudo.csproj" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native.Sample/main.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/Exports/TestudoApplicationExports.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/Exports/TestudoWindowExports.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoApplication.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoWindow.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoWindow.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/include/ITestudoWindow.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Testudo.Native/include/TestudoApplicationConfiguration.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/um/WinUser.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/winrt/wrl/implements.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.39.33519/include/format" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2024" />
+    <option name="minorVersion" value="1.4" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2iS8O8yUSEzouP57aSAPwNH8dfb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "CMake Application.Testudo.Native.Sample.executor": "Debug",
+    "CMake Debug.Testudo.executor": "Debug",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Code/Testudo",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "CPPToolchains",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Code\Testudo\src\Testudo.Native\include" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.Testudo.Native.Sample">
+    <configuration name="Testudo" type="CMakeListConfigurationType" factoryName="CMakeListConfigurationFactory">
+      <method v="2" />
+    </configuration>
+    <configuration name="Testudo.Native" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Testudo" TARGET_NAME="Testudo.Native" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Testudo.Native.Sample" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Testudo" TARGET_NAME="Testudo.Native.Sample" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Testudo" RUN_TARGET_NAME="Testudo.Native.Sample">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.Testudo.Native.Sample" />
+      <item itemvalue="CMake Application.Testudo.Native" />
+      <item itemvalue="CMake Debug.Testudo" />
+      <item itemvalue="Shell Script.Package Local" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f8e2d727-eab3-41f3-aecc-0753a856894c" name="Changes" comment="" />
+      <created>1719472582744</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719472582744</updated>
+      <workItem from="1719472583769" duration="3608000" />
+      <workItem from="1719518446650" duration="9857000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/Testudo.Native/Windows/TestudoApplication.cpp</url>
+          <line>14</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

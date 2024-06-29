@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
         <PackageId>Testudo</PackageId>
         <Description>A work-in-progress experimental cross-platform library for creating lightweight desktop Blazor applications.</Description>
@@ -22,13 +23,24 @@
         <RepositoryBranch>main</RepositoryBranch>
         <RepositoryCommit>f714611adf6219ca78629e34a1128fd1095da391</RepositoryCommit>
         <PackageTags>blazor;desktop</PackageTags>
+        <Configurations>Debug;Release</Configurations>
+        <Platforms>AnyCPU;win-x64;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="../../LICENSE" Pack="true" PackagePath="" Visible="false"/>
         <None Include="../../README.md" Pack="true" PackagePath="" Visible="false"/>
-        <None Include="$(SolutionDir)/src/Testudo.Native/build/Testudo.Native.so" Pack="true"
-              PackagePath="runtimes/linux-x64/native/" Visible="false" />
+        
+        <None Include="$(SolutionDir)/x64/Debug/runtimes/win-x64/native/WebView2Loader.dll"
+              PackagePath="runtimes/win-x64/native/" Pack="true" Visible="false" />
+        
+        <None Include="$(SolutionDir)/x64/Debug/Testudo.Native.dll" Pack="true"
+              PackagePath="runtimes/win-x64/native/" Visible="false" />
+        <None Include="$(SolutionDir)/x64/Debug/Testudo.Native.pdb" Pack="true"
+              PackagePath="runtimes/win-x64/native/" Visible="false" />
+        
+<!--        <None Include="$(SolutionDir)/src/Testudo.Native/build/Testudo.Native.so" Pack="true"-->
+<!--              PackagePath="runtimes/linux-x64/native/" Visible="false" />-->
     </ItemGroup>
 
     <ItemGroup>

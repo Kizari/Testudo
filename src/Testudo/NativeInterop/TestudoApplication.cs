@@ -1,16 +1,43 @@
+using System.Runtime.InteropServices;
+
 namespace Testudo;
 
 /// <inheritdoc />
 public partial class TestudoApplication : ITestudoApplication
 {
-    private readonly IntPtr _instance = TestudoApplication_Construct();
+    /// <summary>
+    /// A pointer to the native TestudoApplication instance that this class wraps.
+    /// </summary>
+    private readonly IntPtr _instance;
+
+    /// <summary>
+    /// Pinned configuration struct that needs to remain stable for the life of the native application.
+    /// </summary>
+    private GCHandle _configurationHandle;
+
+    /// <summary>
+    /// Creates a new native application.
+    /// </summary>
+    /// <param name="configuration">The application configuration.</param>
+    public TestudoApplication(TestudoApplicationConfigurationWrapper configuration)
+    {
+        _configurationHandle = GCHandle.Alloc(configuration.Configuration, GCHandleType.Pinned);
+        _instance = TestudoApplication_Construct(_configurationHandle.AddrOfPinnedObject());
+    }
 
     /// <inheritdoc />
     public int MainThreadId { get; } = Environment.CurrentManagedThreadId;
 
+    /// <inheritdoc />
     public void Dispose()
     {
         TestudoApplication_Destroy(_instance);
+
+        if (_configurationHandle.IsAllocated)
+        {
+            _configurationHandle.Free();
+        }
+
         GC.SuppressFinalize(this);
     }
 
@@ -35,8 +62,5 @@ public partial class TestudoApplication : ITestudoApplication
     }
 
     /// <inheritdoc />
-    public string? OpenFolderDialog()
-    {
-        return TestudoApplication_OpenFolderDialog();
-    }
+    public string? OpenFolderDialog() => TestudoApplication_OpenFolderDialog();
 }

@@ -1,23 +1,6 @@
 #ifdef __linux__
 
-#include <condition_variable>
-
 #include "../TestudoApplication.h"
-
-/**
- * @brief Holds information pertaining to a main thread invocation.
- */
-struct Invocation
-{
-    /** The action to execute on the main thread. */
-    Action action;
-
-    /** Notifies when the callback has finished executing. */
-    std::condition_variable completion;
-
-    /** Specifies whether or not the invocation has completed. */
-    bool is_completed;
-};
 
 /** Used to synchronise main thread invocations. */
 std::mutex invocation_lock;
@@ -37,6 +20,11 @@ void TestudoApplication::run()
     gtk_main();
 }
 
+/**
+ * @brief Invokes the given @ref Invocation in a synchronous manner.
+ * @param data: Pointer to the @ref Invocation object.
+ * @returns Always false.
+ */
 // ReSharper disable once CppParameterMayBeConst
 gboolean TestudoApplication::invoke_function(gpointer data)
 {

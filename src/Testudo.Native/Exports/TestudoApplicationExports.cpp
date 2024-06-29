@@ -1,7 +1,12 @@
 // ReSharper disable CppInconsistentNaming (named this way for C# imports)
 
 #include "Testudo.h"
+
+#if _WIN32
 #include "TestudoApplication.h"
+#else
+#include "TestudoApplication.h"
+#endif
 
 extern "C"
 {
@@ -9,9 +14,9 @@ extern "C"
      * @brief Instantiates a new @ref TestudoApplication.
      * @returns A pointer to the newly created instance.
      */
-    EXPORTED TestudoApplication* TestudoApplication_Construct()
+    EXPORTED TestudoApplication* TestudoApplication_Construct(const TestudoApplicationConfiguration* configuration)
     {
-        return new TestudoApplication();
+        return new TestudoApplication(configuration);
     }
 
     /**
@@ -47,6 +52,6 @@ extern "C"
      */
     EXPORTED String TestudoApplication_OpenFolderDialog()
     {
-        return TestudoApplication::open_folder_dialog();
+        return TestudoApplication::openFolderDialog();
     }
 }

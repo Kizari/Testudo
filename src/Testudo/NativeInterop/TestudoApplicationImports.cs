@@ -14,7 +14,7 @@ public partial class TestudoApplication
     /// </summary>
     /// <returns>A pointer to the newly created instance.</returns>
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-    private static extern IntPtr TestudoApplication_Construct();
+    private static extern IntPtr TestudoApplication_Construct(IntPtr configuration);
 
     /// <summary>
     /// Ends the main program loop (which will cause <see cref="TestudoApplication_Run" /> to return)

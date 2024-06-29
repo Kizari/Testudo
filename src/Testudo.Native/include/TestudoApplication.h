@@ -1,27 +1,35 @@
 #pragma once
 
-#include "Testudo.h"
+#include <condition_variable>
 
-#include <gtk/gtk.h>
+#include "Testudo.h"
+#include "TestudoApplicationConfiguration.h"
+
+/**
+ * @brief Holds information pertaining to a main thread invocation.
+ */
+struct Invocation
+{
+    /** The action to execute on the main thread. */
+    Action action;
+
+    /** Notifies when the callback has finished executing. */
+    std::condition_variable completion;
+
+    /** Specifies whether or not the invocation has completed. */
+    bool isCompleted;
+};
 
 /**
  * @brief Manages the operations of a native application.
  */
 class TestudoApplication
 {
-private:
-    /**
-     * @brief Invokes the given @ref Invocation in a synchronous manner.
-     * @param data: Pointer to the @ref Invocation object.
-     * @returns Always false.
-     */
-    static gboolean invoke_function(gpointer data);
-
 public:
     /**
      * @brief Initializes the application.
      */
-    TestudoApplication();
+    explicit TestudoApplication(const TestudoApplicationConfiguration* pConfiguration);
 
     /**
      * @brief Ends the main program loop and cleans up resources.
@@ -44,5 +52,5 @@ public:
      * @brief Opens a native folder selection dialog.
      * @return The path to the selected folder, or null if no folder was selected.
      */
-    static String open_folder_dialog();
+    static String openFolderDialog();
 };

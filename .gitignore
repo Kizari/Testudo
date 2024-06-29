@@ -403,3 +403,4 @@ riderModule.iml
 **/.idea/shelf/
 
 **/cmake-build-debug/
+src/Testudo.Native/dependencies/

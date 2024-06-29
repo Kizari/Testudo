@@ -7,8 +7,14 @@
  */
 struct TestudoWindowConfiguration
 {
+    /** The window's .ico file in memory. */
+    void* hIcon;
+    
+    /** The title to display in the title bar of the window. */
+    String title;
+
     /** The URI that the window's web view should begin at. */
-    String initial_uri;
+    String initialUri;
 
     /** The position of the window's left edge relative to the left of the screen. */
     int left;
@@ -23,11 +29,11 @@ struct TestudoWindowConfiguration
     int height;
 
     /** Whether or not the window should be centered on the screen. Overrides @ref left and @ref top. */
-    bool is_centered;
+    bool isCentered;
 
     /** The callback that handles received web messages. */
-    WebMessageReceivedDelegate* web_message_received_handler;
+    WebMessageReceivedDelegate webMessageReceivedHandler;
 
     /** The callback that handles retrieving web resources. */
-    WebResourceRequestedDelegate* web_resource_requested_handler;
+    WebResourceRequestedDelegate webResourceRequestedHandler;
 };

@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <webkit/webkit2.h>
 
 /**
  * @brief Holds information pertaining to a JavaScript invocation.
@@ -15,7 +16,19 @@ struct JavaScriptInvocation
     bool is_completed;
 };
 
-void TestudoWindow::script_message_received_callback(
+/** Reference to the GTK window. */
+GtkWidget* _window;
+
+/** Reference to the GTK web view. */
+GtkWidget* _web_view;
+
+/** Reference to the web view's content manager. */
+WebKitUserContentManager* _content_manager;
+
+/**
+ * @brief Passes a JavaScript result back to managed code for processing.
+ */
+static void TestudoWindow::script_message_received_callback(
     [[maybe_unused]] WebKitUserContentManager* content_manager,
     WebKitJavascriptResult* js_result,
     // ReSharper disable once CppParameterMayBeConst
@@ -33,8 +46,11 @@ void TestudoWindow::script_message_received_callback(
     webkit_javascript_result_unref(js_result);
 }
 
+/**
+ * @brief Pulls a resource's data buffer from managed code and passes it to the web view.
+ */
 // ReSharper disable once CppParameterMayBeConst
-void TestudoWindow::web_context_register_uri_scheme_callback(WebKitURISchemeRequest* request, gpointer data)
+static void TestudoWindow::web_context_register_uri_scheme_callback(WebKitURISchemeRequest* request, gpointer data)
 {
     // ReSharper disable once CppCStyleCast
     const auto delegate = (WebResourceRequestedDelegate)data;
@@ -130,7 +146,12 @@ void TestudoWindow::navigate(const String uri) const
     webkit_web_view_load_uri(WEBKIT_WEB_VIEW(_web_view), uri);
 }
 
-std::string TestudoWindow::escape_json(const std::string& string)
+/**
+ * @brief Escapes characters in a JSON string for use with GTK web view.
+ * @param string: The JSON string to format.
+ * @returns The formatted JSON string.
+ */
+static std::string TestudoWindow::escape_json(const std::string& string)
 {
     std::ostringstream string_stream;
 
@@ -176,7 +197,14 @@ std::string TestudoWindow::escape_json(const std::string& string)
     return string_stream.str();
 }
 
-void TestudoWindow::web_view_evaluate_java_script_callback(
+/**
+  * @brief Callback function for @ref webkit_web_view_evaluate_javascript.
+  * @param source_object The web view instance that initiated the evaluation.
+  * @param result The result of the JavaScript evaluation.
+  * @param data @ref JSInvocation instance passed through from the consumer.
+  * Should be an instance of @ref JSInvocation.
+  */
+static void TestudoWindow::web_view_evaluate_java_script_callback(
     [[maybe_unused]] GObject* source_object,
     [[maybe_unused]] GAsyncResult* result,
     // ReSharper disable once CppParameterMayBeConst

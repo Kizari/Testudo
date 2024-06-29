@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,7 +14,28 @@ namespace Testudo;
 public partial class TestudoWindow : ITestudoWindow
 {
     /// <summary>
-    /// A pointer to the native TestudoWindow instance.
+    /// Holds references to the web message received delegates for each <see cref="TestudoWindow" /> instance.<br />
+    /// <b>Key</b> — Pointer to the native instance that this class wraps.<br />
+    /// <b>Value</b> — The delegate associated with this instance.
+    /// </summary>
+    private static readonly ConcurrentDictionary<IntPtr, TestudoWebViewManager.WebMessageReceivedDelegate>
+        _webMessageReceivedHandlers = [];
+
+    /// <summary>
+    /// Holds references to the web resource requested delegates for each <see cref="TestudoWindow" /> instance.<br />
+    /// <b>Key</b> — Pointer to the native instance that this class wraps.<br />
+    /// <b>Value</b> — The delegate associated with this instance.
+    /// </summary>
+    private static readonly ConcurrentDictionary<IntPtr, TestudoWebViewManager.WebResourceRequestedDelegate>
+        _webResourceRequestedHandlers = [];
+
+    /// <summary>
+    /// Holds a reference to the configuration's dispose method so it can be called when this class disposes.
+    /// </summary>
+    private readonly Action _configurationFinalizer;
+
+    /// <summary>
+    /// A pointer to the native TestudoWindow instance that this class wraps.
     /// </summary>
     private readonly IntPtr _instance;
 
@@ -21,10 +45,9 @@ public partial class TestudoWindow : ITestudoWindow
     private readonly WebViewManager _webViewManager;
 
     /// <summary>
-    /// Holds a reference to the window configuration to prevent the delegates being garbage collected while
-    /// the native window still needs to be able to call them.
+    /// Pinned configuration struct that needs to remain stable for the life of the native application.
     /// </summary>
-    private readonly TestudoWindowConfiguration _configuration;
+    private GCHandle _configurationHandle;
 
     /// <summary>
     /// Creates a new native window containing a web view and immediately shows it.
@@ -33,6 +56,16 @@ public partial class TestudoWindow : ITestudoWindow
     /// <param name="configuration">The window's configuration.</param>
     public TestudoWindow(IServiceProvider provider, TestudoWindowConfiguration configuration)
     {
+        // Pass in pointers to the web view manager callbacks
+        var pWebMessageReceivedHandler = typeof(TestudoWindow)
+            .GetMethod(nameof(WebMessageReceivedHandler), BindingFlags.Static | BindingFlags.Public)!
+            .MethodHandle.GetFunctionPointer();
+        configuration.SetWebMessageReceivedHandler(pWebMessageReceivedHandler);
+        var pWebResourceRequestedHandler = typeof(TestudoWindow)
+            .GetMethod(nameof(WebResourceRequestedHandler), BindingFlags.Static | BindingFlags.Public)!
+            .MethodHandle.GetFunctionPointer();
+        configuration.SetWebResourceRequestedHandler(pWebResourceRequestedHandler);
+
         // Create a web view manager for this window
         _webViewManager = new TestudoWebViewManager(this, provider,
             provider.GetRequiredService<Dispatcher>(),
@@ -40,23 +73,32 @@ public partial class TestudoWindow : ITestudoWindow
             provider.GetRequiredService<JSComponentConfigurationStore>(),
             out var webMessageReceivedHandler,
             out var webResourceRequestedHandler);
-        
-        configuration.SetWebMessageReceivedHandler(webMessageReceivedHandler);
-        configuration.SetWebResourceRequestedHandler(webResourceRequestedHandler);
 
         // Create the native window
-        _configuration = configuration;
-        var pConfiguration = Marshal.AllocHGlobal(Marshal.SizeOf(configuration));
-        Marshal.StructureToPtr(configuration, pConfiguration, false);
-        _instance = TestudoWindow_Construct(pConfiguration);
-        Marshal.FreeHGlobal(pConfiguration);
+        _configurationHandle = GCHandle.Alloc(configuration, GCHandleType.Pinned);
+        _configurationFinalizer = configuration.Dispose;
+        _instance = TestudoWindow_Construct(_configurationHandle.AddrOfPinnedObject());
+
+        // Store the web view callbacks
+        _webMessageReceivedHandlers[_instance] = webMessageReceivedHandler;
+        _webResourceRequestedHandlers[_instance] = webResourceRequestedHandler;
+
+        // Initialize the web view and show the window
+        TestudoWindow_Show(_instance);
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        _webViewManager.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         TestudoWindow_Destroy(_instance);
+        _webViewManager.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+        if (_configurationHandle.IsAllocated)
+        {
+            _configurationHandle.Free();
+        }
+
+        _configurationFinalizer();
         GC.SuppressFinalize(this);
     }
 
@@ -77,5 +119,39 @@ public partial class TestudoWindow : ITestudoWindow
     public void SendMessage(string message)
     {
         TestudoWindow_SendMessage(_instance, message);
+    }
+
+    /// <summary>
+    /// Calls the appropriate web message received delegate.
+    /// </summary>
+    /// <param name="instance">The native instance that called this method.</param>
+    /// <param name="pMessage">Pointer to the web message <c>string</c>.</param>
+    /// <remarks>
+    /// This method is static so that pointers to it do not move around in memory at runtime.
+    /// </remarks>
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    public static void WebMessageReceivedHandler(IntPtr instance, IntPtr pMessage)
+    {
+        var message = Marshal.PtrToStringAuto(pMessage)!;
+        _webMessageReceivedHandlers[instance](message);
+    }
+
+    /// <summary>
+    /// Calls the appropriate web resource requested delegate.
+    /// </summary>
+    /// <param name="instance">The native instance that called this method.</param>
+    /// <param name="pUri">Pointer to the URI <c>string</c>.</param>
+    /// <param name="outSizeBytes">The size of the response buffer in bytes.</param>
+    /// <param name="outContentType">Pointer to the content type <c>string</c>.</param>
+    /// <returns>Pointer to the response buffer.</returns>
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe IntPtr WebResourceRequestedHandler(IntPtr instance, IntPtr pUri,
+        int* outSizeBytes, IntPtr* outContentType)
+    {
+        var uri = Marshal.PtrToStringAuto(pUri)!;
+        var result = _webResourceRequestedHandlers[instance](uri, out var sizeBytes, out var contentType);
+        *outSizeBytes = sizeBytes;
+        *outContentType = Marshal.StringToHGlobalAuto(contentType);
+        return result;
     }
 }

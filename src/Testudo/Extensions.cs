@@ -12,11 +12,14 @@ public static class Extensions
     /// Adds all services required for Testudo to operate to the dependency injection container.
     /// </summary>
     /// <param name="services">The service collection to add Testudo to.</param>
+    /// <param name="configuration">The configuration for the application.</param>
     /// <returns>The same service collection that was passed in.</returns>
     /// <remarks>
     /// <b>The service container must be built on the main thread for this to operate correctly.</b>
     /// </remarks>
-    public static IServiceCollection AddTestudo(this IServiceCollection services) => services
+    public static IServiceCollection AddTestudo(this IServiceCollection services, 
+        TestudoApplicationConfiguration configuration) => services
+        .AddSingleton(new TestudoApplicationConfigurationWrapper(configuration))
         .AddSingleton<ITestudoApplication, TestudoApplication>()
         .AddSingleton<Dispatcher, TestudoDispatcher>()
         .AddSingleton<IWindowManager, WindowManager>()

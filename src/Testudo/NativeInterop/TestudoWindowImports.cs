@@ -4,10 +4,11 @@ namespace Testudo;
 
 public partial class TestudoWindow
 {
+    /// <inheritdoc cref="TestudoApplication.LibraryName" />
     private const string LibraryName = TestudoApplication.LibraryName;
 
     /// <summary>
-    /// Creates a new window containing a web view and immediately shows it.
+    /// Creates a new native window.
     /// </summary>
     /// <param name="configuration">The window's configuration.</param>
     /// <returns>A pointer to the newly created instance.</returns>
@@ -20,6 +21,13 @@ public partial class TestudoWindow
     /// <param name="instance">A pointer to the native instance to destroy.</param>
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
     private static extern void TestudoWindow_Destroy(IntPtr instance);
+
+    /// <summary>
+    /// Initializes the window's embedded web view, then shows the window.
+    /// </summary>
+    /// <param name="instance">A pointer to the native instance to show.</param>
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+    private static extern void TestudoWindow_Show(IntPtr instance);
 
     /// <summary>
     /// Navigates the given window's web view to the given URI.

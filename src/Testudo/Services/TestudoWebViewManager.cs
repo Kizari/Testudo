@@ -10,6 +10,16 @@ namespace Testudo;
 public class TestudoWebViewManager : WebViewManager
 {
     /// <summary>
+    /// Delegate that represents <see cref="OnWebMessageReceived" />.
+    /// </summary>
+    public delegate void WebMessageReceivedDelegate(string message);
+
+    /// <summary>
+    /// Delegate that represents <see cref="OnWebResourceRequested" />.
+    /// </summary>
+    public delegate IntPtr WebResourceRequestedDelegate(string uri, out int sizeBytes, out string contentType);
+
+    /// <summary>
     /// The path of <c>index.html</c> relative to <c>wwwroot</c>.
     /// </summary>
     private const string HostPageRelativePath = "index.html";
@@ -26,6 +36,9 @@ public class TestudoWebViewManager : WebViewManager
     /// </summary>
     private static readonly Uri BaseUri = new($"{UriScheme}://localhost/");
 
+    /// <summary>
+    /// The window that contains the web view that this class is managing.
+    /// </summary>
     private readonly ITestudoWindow _window;
 
     /// <inheritdoc cref="WebViewManager" />
@@ -43,8 +56,8 @@ public class TestudoWebViewManager : WebViewManager
         Dispatcher dispatcher,
         IFileProvider fileProvider,
         JSComponentConfigurationStore jsComponents,
-        out TestudoWindowConfiguration.WebMessageReceivedDelegate webMessageReceivedHandler,
-        out TestudoWindowConfiguration.WebResourceRequestedDelegate webResourceRequestedHandler)
+        out WebMessageReceivedDelegate webMessageReceivedHandler,
+        out WebResourceRequestedDelegate webResourceRequestedHandler)
         : base(provider, dispatcher, BaseUri, fileProvider, jsComponents, HostPageRelativePath)
     {
         _window = window;
@@ -112,8 +125,10 @@ public class TestudoWebViewManager : WebViewManager
             content.CopyTo(stream);
             size = (int)stream.Position;
 
+            // Testudo.Native uses a CoTaskMem smart pointer to free "buffer" when it is finished with it
+            // so there is no need to free that memory here
             var buffer = Marshal.AllocHGlobal(size);
-            Marshal.Copy(stream.GetBuffer(), 0, buffer, size);
+            Marshal.Copy(stream.ToArray(), 0, buffer, size);
             return buffer;
         }
 
