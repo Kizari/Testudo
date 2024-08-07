@@ -77,6 +77,14 @@ HRESULT TestudoWindow::createCoreWebView2ControllerHandler(
     webviewController = createdController;
     CHECK_HRESULT(webviewController->get_CoreWebView2(&_webView));
 
+    // Enable dev tools
+    if (_configuration->areDevToolsEnabled)
+    {
+        ICoreWebView2Settings* settings;
+        CHECK_HRESULT(_webView->get_Settings(&settings));
+        CHECK_HRESULT(settings->put_AreDevToolsEnabled(true));
+    }
+
     // Resize WebView to fit the bounds of the parent window
     RECT bounds;
     GetClientRect(_hWnd, &bounds);
@@ -146,7 +154,7 @@ TestudoWindow::TestudoWindow(const TestudoWindowConfiguration* configuration): I
     _hWnd = CreateWindowEx(0,
                            className.c_str(),
                            configuration->title,
-                           WS_OVERLAPPEDWINDOW,
+                           configuration->hasWindowShell ? WS_OVERLAPPEDWINDOW : WS_POPUP,
                            configuration->left,
                            configuration->top,
                            configuration->width,
@@ -176,7 +184,8 @@ void TestudoWindow::show()
 
     // Create the web view
     const auto options = Make<CoreWebView2EnvironmentOptions>();
-    DISPLAY_HRESULT(options->put_AdditionalBrowserArguments(L"--kiosk"));
+    const auto arguments = _configuration->areDevToolsEnabled ? L"--force-devtools-available" : L"--kiosk";
+    DISPLAY_HRESULT(options->put_AdditionalBrowserArguments(arguments));
     DISPLAY_HRESULT(CreateCoreWebView2EnvironmentWithOptions(nullptr, nullptr, options.Get(),
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>
             (this, &TestudoWindow::createCoreWebView2EnvironmentHandler).Get()));

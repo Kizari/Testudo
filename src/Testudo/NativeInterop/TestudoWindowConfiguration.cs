@@ -50,6 +50,16 @@ public struct TestudoWindowConfiguration : IDisposable
     public bool IsCentered;
 
     /// <summary>
+    /// Whether the window has a titlebar and border.
+    /// </summary>
+    public bool HasWindowShell;
+
+    /// <summary>
+    /// Whether developer tools are enabled for this window.
+    /// </summary>
+    public bool AreDevToolsEnabled;
+
+    /// <summary>
     /// A delegate that handles received web messages.
     /// </summary>
     private IntPtr WebMessageReceivedHandler;

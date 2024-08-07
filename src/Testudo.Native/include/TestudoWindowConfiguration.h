@@ -28,8 +28,14 @@ struct TestudoWindowConfiguration
     /** The height of the window in pixels. */
     int height;
 
-    /** Whether or not the window should be centered on the screen. Overrides @ref left and @ref top. */
+    /** Whether the window should be centered on the screen. Overrides @ref left and @ref top. */
     bool isCentered;
+
+    /** Whether the window has a titlebar and border. */
+    bool hasWindowShell;
+
+    /** Whether developer tools are enabled for this window. */
+    bool areDevToolsEnabled;
 
     /** The callback that handles received web messages. */
     WebMessageReceivedDelegate webMessageReceivedHandler;
