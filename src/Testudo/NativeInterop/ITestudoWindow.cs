@@ -3,7 +3,7 @@ namespace Testudo;
 /// <summary>
 /// Manages a native window containing a web view.
 /// </summary>
-public interface ITestudoWindow : IDisposable
+public interface ITestudoWindow : IAsyncDisposable
 {
     /// <summary>
     /// Adds the root Razor component to this window's web view.

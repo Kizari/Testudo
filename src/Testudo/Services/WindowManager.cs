@@ -8,27 +8,27 @@ public class WindowManager(IScopeContext scopeContext) : IWindowManager
     private readonly ConcurrentDictionary<Type, ITestudoWindow> _windows = [];
 
     /// <inheritdoc />
-    public void CloseWindow<TComponent>()
+    public async Task CloseWindowAsync<TComponent>()
     {
         if (_windows.TryRemove(typeof(TComponent), out var window))
         {
-            window.Dispose();
+            await window.DisposeAsync();
         }
     }
 
     /// <inheritdoc />
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         foreach (var (_, window) in _windows)
         {
-            window.Dispose();
+            await window.DisposeAsync();
         }
-
+        
         GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc />
-    public void OpenWindow<TComponent>(TestudoWindowConfiguration configuration)
+    public Task OpenWindowAsync<TComponent>(TestudoWindowConfiguration configuration)
     {
         // Ensure the window isn't already open
         if (!_windows.ContainsKey(typeof(TComponent)))
@@ -45,5 +45,7 @@ public class WindowManager(IScopeContext scopeContext) : IWindowManager
             window.AddRootComponent<TComponent>();
             _windows[typeof(TComponent)] = window;
         }
+
+        return Task.CompletedTask;
     }
 }

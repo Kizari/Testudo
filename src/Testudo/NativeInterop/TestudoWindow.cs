@@ -45,9 +45,16 @@ public partial class TestudoWindow : ITestudoWindow
     private readonly WebViewManager _webViewManager;
 
     /// <summary>
+    /// Holds a reference to the application service.
+    /// </summary>
+    private readonly ITestudoApplication _application;
+
+    /// <summary>
     /// Pinned configuration struct that needs to remain stable for the life of the native application.
     /// </summary>
     private GCHandle _configurationHandle;
+
+    private bool _isDisposing;
 
     /// <summary>
     /// Creates a new native window containing a web view and immediately shows it.
@@ -77,21 +84,28 @@ public partial class TestudoWindow : ITestudoWindow
         // Create the native window
         _configurationHandle = GCHandle.Alloc(configuration, GCHandleType.Pinned);
         _configurationFinalizer = configuration.Dispose;
-        _instance = TestudoWindow_Construct(_configurationHandle.AddrOfPinnedObject());
+
+        // Instantiate window on main thread
+        _application = provider.GetRequiredService<ITestudoApplication>();
+        var instance = IntPtr.Zero;
+        _application.Invoke(() => instance = TestudoWindow_Construct(_configurationHandle.AddrOfPinnedObject()));
+        _instance = instance;
 
         // Store the web view callbacks
         _webMessageReceivedHandlers[_instance] = webMessageReceivedHandler;
         _webResourceRequestedHandlers[_instance] = webResourceRequestedHandler;
 
         // Initialize the web view and show the window
-        TestudoWindow_Show(_instance);
+        _application.Invoke(() => TestudoWindow_Show(_instance));
     }
 
     /// <inheritdoc />
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        TestudoWindow_Destroy(_instance);
-        _webViewManager.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        _isDisposing = true;
+        
+        _application.Invoke(() => TestudoWindow_Destroy(_instance));
+        await _webViewManager.DisposeAsync();
 
         if (_configurationHandle.IsAllocated)
         {
@@ -112,13 +126,19 @@ public partial class TestudoWindow : ITestudoWindow
     /// <inheritdoc />
     public void Navigate(string relativePath)
     {
-        TestudoWindow_Navigate(_instance, TestudoWebViewManager.CreateUri(relativePath));
+        if (!_isDisposing)
+        {
+            TestudoWindow_Navigate(_instance, TestudoWebViewManager.CreateUri(relativePath));
+        }
     }
 
     /// <inheritdoc />
     public void SendMessage(string message)
     {
-        TestudoWindow_SendMessage(_instance, message);
+        if (!_isDisposing)
+        {
+            TestudoWindow_SendMessage(_instance, message);
+        }
     }
 
     /// <summary>

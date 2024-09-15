@@ -187,7 +187,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(WebView2LoaderLib);WebView2Loader.dll.lib;%(AdditionalDependencies);shlwapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(WebView2LoaderLib);WebView2Loader.dll.lib;%(AdditionalDependencies);shlwapi.lib;dwmapi.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

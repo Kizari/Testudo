@@ -18,7 +18,7 @@ using Action = void(*)();
  * @param pInstance Pointer to the @ref TestudoWindow instance whose web view received the message.
  * @param message The web message that was received.
  */
-using WebMessageReceivedDelegate = void(*)(void* pInstance, String message);
+using WebMessageReceivedDelegate = void(__cdecl *)(void* pInstance, String message);
 
 /**
  * @brief Represents a function pointer to a managed function that handles web requests.
@@ -28,4 +28,4 @@ using WebMessageReceivedDelegate = void(*)(void* pInstance, String message);
  * @param contentType Will be populated with the MIME type of the resource.
  * @return Pointer to a buffer containing the data of the requested resource.
  */
-using WebResourceRequestedDelegate = void* (*)(void* pInstance, String uri, int* sizeBytes, String* contentType);
+using WebResourceRequestedDelegate = void* (__cdecl *)(void* pInstance, String uri, int* sizeBytes, String* contentType);

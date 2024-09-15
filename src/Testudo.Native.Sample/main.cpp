@@ -6,18 +6,22 @@ extern "C"
 {
     __declspec(dllimport) TestudoApplication* TestudoApplication_Construct(const TestudoApplicationConfiguration* configuration);
     __declspec(dllimport) ITestudoWindow* TestudoWindow_Construct(const TestudoWindowConfiguration* configuration);
+    __declspec(dllimport) void TestudoWindow_Show(ITestudoWindow* instance);
     __declspec(dllimport) void TestudoApplication_Run();
 }
 
-void nothing(String arg) { }
-void* redPage(String uri, int* sizeBytes, String* contentType)
+void nothing(void* pInstance, String arg) { }
+void* redPage(void* pInstance, String uri, int* sizeBytes, String* contentType)
 {
-    auto html = std::wstring(L"<html><body bgcolor=\"red\"></body></html>");
-    auto buffer = html.c_str();
-    *sizeBytes = wcslen(buffer) * sizeof(wchar_t);
-    *contentType = L"application/html";
+    const auto html = std::wstring(L"<html><body bgcolor=\"red\"></body></html>");
+    const auto size = (wcslen(html.c_str()) + 1) * sizeof(wchar_t); // +1 for null terminator
+    const auto buffer = new BYTE[size];
+    memcpy(buffer, html.c_str(), size);
+    *sizeBytes = size;
+    *contentType = L"text/html";
     return (void*)buffer;
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -33,9 +37,13 @@ int main(int argc, char* argv[])
     windowConfig.isCentered = true;
     windowConfig.title = L"Testudo.Native.Sample";
     windowConfig.initialUri = L"https://duckduckgo.com";
+    windowConfig.hIcon = nullptr;
+    windowConfig.hasWindowShell = true;
+    windowConfig.areDevToolsEnabled = false;
     windowConfig.webMessageReceivedHandler = &nothing;
     windowConfig.webResourceRequestedHandler = &redPage;
-    auto window = TestudoWindow_Construct(&windowConfig);
+    const auto window = TestudoWindow_Construct(&windowConfig);
+    TestudoWindow_Show(window);
 
     TestudoApplication_Run();
     

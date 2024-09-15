@@ -47,16 +47,19 @@ public struct TestudoWindowConfiguration : IDisposable
     /// Whether to center the window on the screen.
     /// </summary>
     /// <remarks>Overrides <see cref="Left" /> and <see cref="Top" />.</remarks>
+    [MarshalAs(UnmanagedType.U1)]
     public bool IsCentered;
 
     /// <summary>
     /// Whether the window has a titlebar and border.
     /// </summary>
+    [MarshalAs(UnmanagedType.U1)]
     public bool HasWindowShell;
 
     /// <summary>
     /// Whether developer tools are enabled for this window.
     /// </summary>
+    [MarshalAs(UnmanagedType.U1)]
     public bool AreDevToolsEnabled;
 
     /// <summary>

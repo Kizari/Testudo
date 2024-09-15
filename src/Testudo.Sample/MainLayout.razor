@@ -1,0 +1,16 @@
+﻿@using Microsoft.Extensions.Logging
+@inherits LayoutComponentBase
+
+@inject ILogger<MainLayout> Logger
+
+<ErrorBoundary>
+    <ChildContent>
+        @Body
+    </ChildContent>
+    <ErrorContent Context="exception">
+        @{
+            Logger.LogError(exception, "An unhandled exception occurred in the Blazor app");
+            <p>Unhandled exception!</p>
+        }
+    </ErrorContent>
+</ErrorBoundary>

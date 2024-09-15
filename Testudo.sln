@@ -6,6 +6,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testudo.Native", "src\Testu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testudo.Native.Sample", "src\Testudo.Native.Sample\Testudo.Native.Sample.vcxproj", "{D68C2EEB-635B-4447-B980-25287706481D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testudo.Sample", "src\Testudo.Sample\Testudo.Sample.csproj", "{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,5 +40,13 @@ Global
 		{D68C2EEB-635B-4447-B980-25287706481D}.Release|x64.Build.0 = Release|x64
 		{D68C2EEB-635B-4447-B980-25287706481D}.Debug|x64.ActiveCfg = Debug|x64
 		{D68C2EEB-635B-4447-B980-25287706481D}.Debug|x64.Build.0 = Debug|x64
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{DC549D64-9AF8-42B4-96B9-21EFD9FA01E6}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
